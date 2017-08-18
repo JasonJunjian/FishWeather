@@ -5,8 +5,12 @@ import android.text.TextUtils;
 import com.fishweather.android.db.City;
 import com.fishweather.android.db.County;
 import com.fishweather.android.db.Province;
+import com.fishweather.android.gson.ProvinceJson;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -23,11 +27,12 @@ public class Utility {
     public  static boolean convertProvinceResponse(String response){
         if(!TextUtils.isEmpty(response)){
             try{
-                Gson gson = new Gson();
-                Type type = new TypeToken<ArrayList<Province>>() {
-                }.getType();
-                ArrayList<Province> provinces = gson.fromJson(response,type);
-                for(Province province : provinces){
+                JSONArray  jsonArray = new JSONArray(response);
+                for ( int i=0;i<jsonArray.length();i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    Province province = new Province();
+                    province.setProvinceCode(jsonObject.getInt("id"));
+                    province.setProvinceName(jsonObject.getString("name"));
                     province.save();
                 }
                 return  true;
@@ -40,14 +45,16 @@ public class Utility {
     /*
     * 解析和处理服务器返回的城市数据
     * */
-    public  static boolean convertCityResponse(String response){
+    public  static boolean convertCityResponse(String response,int provinceId){
         if(!TextUtils.isEmpty(response)){
             try{
-                Gson gson = new Gson();
-                Type type = new TypeToken<ArrayList<City>>() {
-                }.getType();
-                ArrayList<City> citys = gson.fromJson(response,type);
-                for(City city : citys){
+                JSONArray  jsonArray = new JSONArray(response);
+                for ( int i=0;i<jsonArray.length();i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    City city = new City();
+                    city.setCityCode(jsonObject.getInt("id"));
+                    city.setCityName(jsonObject.getString("name"));
+                    city.setProvinceCode(provinceId);
                     city.save();
                 }
                 return  true;
@@ -60,14 +67,16 @@ public class Utility {
     /*
     * 解析和处理服务器返回的省级数据
     * */
-    public  static boolean convertCountyResponse(String response){
+    public  static boolean convertCountyResponse(String response,int cityId){
         if(!TextUtils.isEmpty(response)){
             try{
-                Gson gson = new Gson();
-                Type type = new TypeToken<ArrayList<County>>() {
-                }.getType();
-                ArrayList<County> countys = gson.fromJson(response,type);
-                for(County county : countys){
+                JSONArray  jsonArray = new JSONArray(response);
+                for ( int i=0;i<jsonArray.length();i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    County county = new County();
+                    county.setWeatherId(jsonObject.getString("weather_id"));
+                    county.setCountyName(jsonObject.getString("name"));
+                    county.setCtiyId (cityId);
                     county.save();
                 }
                 return  true;
