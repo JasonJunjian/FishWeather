@@ -122,7 +122,7 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCity(){
         titleText.setText(selectedProvince.getProvinceName());
         backButton.setVisibility(View.VISIBLE);
-        cityList = DataSupport.findAll(City.class);
+        cityList = DataSupport.where("ProvinceCode= ? ",String.valueOf(selectedProvince.getId())).find(City.class);
         if(cityList.size() > 0){
             dataList.clear();
             for (City city: cityList ) {
@@ -132,14 +132,14 @@ public class ChooseAreaFragment extends Fragment {
             areaListView.setSelection(0);
             currentLevel = LEVEL_CITY;
         }else{
-            queryFromServer("http://guolin.tech/api/china/"+selectedProvince.getId(),LEVEL_CITY);
+            queryFromServer("http://guolin.tech/api/china/"+selectedProvince.getProvinceCode(),LEVEL_CITY);
         }
     }
     /*查询绑定县数据*/
     private void queryCounty(){
         titleText.setText(selectedCity.getCityName());
         backButton.setVisibility(View.VISIBLE);
-        countyList = DataSupport.findAll(County.class);
+        countyList = DataSupport.where("CtiyId = ? ",String.valueOf(selectedCity.getId())).find(County.class);
         if(countyList.size() > 0){
             dataList.clear();
             for (County county: countyList ) {
@@ -149,7 +149,7 @@ public class ChooseAreaFragment extends Fragment {
             areaListView.setSelection(0);
             currentLevel = LEVEL_COUNTY;
         }else{
-            queryFromServer("http://guolin.tech/api/china/"+selectedProvince.getId()+"/"+selectedCity.getId(),LEVEL_COUNTY);
+            queryFromServer("http://guolin.tech/api/china/"+selectedProvince.getProvinceCode()+"/"+selectedCity.getCityCode(),LEVEL_COUNTY);
         }
     }
     private void queryFromServer(String url ,final int level){
@@ -214,7 +214,7 @@ public class ChooseAreaFragment extends Fragment {
         progressDialog.show();
     }
     private void closeProgressDialog(){
-        if(progressDialog == null){
+        if(progressDialog != null){
             progressDialog.dismiss();
         }
     }

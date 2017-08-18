@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.fishweather.android.db.City;
+import com.fishweather.android.db.County;
 import com.fishweather.android.db.Province;
 import com.fishweather.android.util.HttpUtil;
 import com.fishweather.android.util.Utility;
@@ -25,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        DataSupport.deleteAll(Province.class);
+        DataSupport.deleteAll(City.class);
+        DataSupport.deleteAll(County.class);
 //        HttpUtil.sendOkHttpRequest("http://guolin.tech/api/china", new Callback() {
 //            @Override
 //            public void onFailure(Call call, IOException e) {
