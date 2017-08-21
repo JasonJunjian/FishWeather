@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +43,7 @@ public class ChooseAreaFragment extends Fragment {
 
     private ProgressDialog progressDialog;
     private TextView titleText;
-    private Button backButton;
+    private ImageView backButton;
     private ListView areaListView;
 
     private ArrayAdapter<String> adapter;
@@ -67,7 +68,7 @@ public class ChooseAreaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.choose_area,container,false);
         titleText = (TextView)  view.findViewById(R.id.title_text);
-        backButton = (Button) view.findViewById(R.id.back_button);
+        backButton = (ImageView) view.findViewById(R.id.back_button);
         areaListView = (ListView) view.findViewById(R.id.area_listview);
         adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,dataList);
         areaListView.setAdapter(adapter);
@@ -101,6 +102,8 @@ public class ChooseAreaFragment extends Fragment {
         });
         queryProvince();
     }
+
+
     /*查询绑定省份数据*/
     private void queryProvince(){
         titleText.setText("中国");
@@ -203,6 +206,8 @@ public class ChooseAreaFragment extends Fragment {
                 }
             }
         });
+
+
     }
 
     private void showProgressDialog(){
@@ -216,6 +221,18 @@ public class ChooseAreaFragment extends Fragment {
     private void closeProgressDialog(){
         if(progressDialog != null){
             progressDialog.dismiss();
+        }
+    }
+
+    public boolean back(){
+        if(currentLevel == LEVEL_COUNTY){
+            queryCity();
+            return false;
+        }else if(currentLevel == LEVEL_CITY){
+            queryProvince();
+            return false;
+        }else{
+            return true;
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.fishweather.android;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,14 +23,13 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    ChooseAreaFragment choose_area;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DataSupport.deleteAll(Province.class);
-        DataSupport.deleteAll(City.class);
-        DataSupport.deleteAll(County.class);
+        choose_area = (ChooseAreaFragment) getSupportFragmentManager().findFragmentById(R.id.choose_area);
 //        HttpUtil.sendOkHttpRequest("http://guolin.tech/api/china", new Callback() {
 //            @Override
 //            public void onFailure(Call call, IOException e) {
@@ -42,5 +42,13 @@ public class MainActivity extends AppCompatActivity {
 //                Utility.convertProvinceResponse(result);
 //            }
 //        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(choose_area.back()){
+            finish();
+        }
+
     }
 }
