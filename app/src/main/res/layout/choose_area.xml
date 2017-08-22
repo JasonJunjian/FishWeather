@@ -30,7 +30,6 @@
             android:scaleType="centerInside"
             android:src="@drawable/ic_back"
             />
-
     </RelativeLayout>
 
     <ListView

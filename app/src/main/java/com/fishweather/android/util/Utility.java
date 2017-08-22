@@ -5,15 +5,9 @@ import android.text.TextUtils;
 import com.fishweather.android.db.City;
 import com.fishweather.android.db.County;
 import com.fishweather.android.db.Province;
-import com.fishweather.android.gson.ProvinceJson;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 /**
  * Created by jason on 2017/8/17.
