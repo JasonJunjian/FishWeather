@@ -2,12 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:fitsSystemWindows="true"
+              android:id="@+id/bar_layout"
+              android:background="?attr/colorPrimaryDark"
+    >
 
     <RelativeLayout
+
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
+        android:fitsSystemWindows="true"
         >
 
         <TextView
@@ -36,6 +42,7 @@
         android:id="@+id/area_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#fff"
         >
     </ListView>
 </LinearLayout>

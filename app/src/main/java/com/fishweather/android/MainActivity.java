@@ -1,8 +1,12 @@
 package com.fishweather.android;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String weatherStr = preferences.getString("weather", null);
+        if (!TextUtils.isEmpty(weatherStr)) {
+            Intent intent = new Intent(this,WeatherActivity.class);
+            startActivity(intent);
+            finish();
+        }
         choose_area = (ChooseAreaFragment) getSupportFragmentManager().findFragmentById(R.id.choose_area);
 //        HttpUtil.sendOkHttpRequest("http://guolin.tech/api/china", new Callback() {
 //            @Override

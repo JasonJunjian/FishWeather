@@ -9,17 +9,17 @@ import java.util.List;
  */
 
 public class Weather {
-    private AQI aqi;
+    public AQI aqi;
 
-    private Basic basic;
+    public Basic basic;
 
     @SerializedName("daily_forecast")
-    private List<Forecast> forecastList;
+    public List<Forecast> forecastList;
 
-    private Now now;
+    public Now now;
 
-    private String status;
+    public String status;
 
-    private Suggestion suggestion;
+    public Suggestion suggestion;
 
 }
