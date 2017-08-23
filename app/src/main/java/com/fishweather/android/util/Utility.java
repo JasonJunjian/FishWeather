@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import com.fishweather.android.db.City;
 import com.fishweather.android.db.County;
 import com.fishweather.android.db.Province;
+import com.fishweather.android.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -79,5 +81,22 @@ public class Utility {
             }
         }
         return  false;
+    }
+    /*
+    * 解析和处理服务器返回的天气数据
+    * */
+    public  static Weather convertWeatherResponse(String response){
+        if(!TextUtils.isEmpty(response)){
+            try{
+                JSONObject  jsonObject = new JSONObject(response);
+                JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+                String weatherJSON = jsonArray.getJSONObject(0).toString();
+                return new Gson().fromJson(weatherJSON, Weather.class);
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+            return  null;
+        }
+        return  null;
     }
 }
