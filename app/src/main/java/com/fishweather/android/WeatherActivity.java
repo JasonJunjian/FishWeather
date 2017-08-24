@@ -81,19 +81,20 @@ public class WeatherActivity extends AppCompatActivity {
         String weatherStr = preferences.getString("weather", null);
         String bingImageStr = preferences.getString("bingImage", null);
 
+//        if (!TextUtils.isEmpty(bingImageStr)) {
+//            Glide.with(this).load(bingImageStr).into(bingImage);
+//        } else {
+//            loadBingPic();
+//        }
         if (TextUtils.isEmpty(weatherStr)) {
             weatherId = getIntent().getStringExtra("weather_id");
             requestWeather(weatherId);
         } else {
             Weather weather = Utility.convertWeatherResponse(weatherStr);
             weatherId = weather.basic.id;
-            showWeatherInfo(weather);
+            requestWeather(weatherId);
         }
-        if (!TextUtils.isEmpty(bingImageStr)) {
-            Glide.with(this).load(bingImageStr).into(bingImage);
-        } else {
-            loadBingPic();
-        }
+
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -179,6 +180,26 @@ public class WeatherActivity extends AppCompatActivity {
             aqiText.setText(weather.aqi.city.aqi);
             pmText.setText(weather.aqi.city.pm25);
         }
+        //http://i.tq121.com.cn/i/jsyb/d01.jpg
+        String imageUrl = "http://i.tq121.com.cn/i/jsyb/d00.jpg";
+        if(weatherInfo.equals("晴")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d00.jpg";
+        }else if(weatherInfo.contains("云")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d01.jpg";
+        }else if(weatherInfo.contains("阴")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d02.jpg";
+        }else if(weatherInfo.contains("雷")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d03.jpg";
+        }else if(weatherInfo.contains("雪")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d17.jpg";
+        }else if(weatherInfo.contains("雨")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d03.jpg";
+        }else if(weatherInfo.contains("雾")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d18.jpg";
+        }else if(weatherInfo.contains("霾")||weatherInfo.contains("沙")||weatherInfo.contains("尘")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d20.jpg";
+        }
+        Glide.with(this).load(imageUrl).into(bingImage);
     }
 
     private void loadBingPic() {
@@ -191,7 +212,7 @@ public class WeatherActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                final String body = response.body().string();
+                final String body = "https://cn.bing.com/ImageResolution.aspx?w=375&h=667&hash=549135d4769e29708ca72d1ba4c90e9e&intlF=";//response.body().string();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

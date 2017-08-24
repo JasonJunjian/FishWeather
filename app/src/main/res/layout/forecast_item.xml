@@ -30,7 +30,7 @@
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
         android:textColor="#fff"
-        android:gravity="center"
+        android:gravity="right"
         android:text="28"
         />
     <TextView
@@ -40,7 +40,7 @@
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
         android:textColor="#fff"
-        android:gravity="center"
+        android:gravity="right"
         android:text="22"
         />
 </LinearLayout>
