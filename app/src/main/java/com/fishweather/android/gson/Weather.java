@@ -22,4 +22,5 @@ public class Weather {
 
     public Suggestion suggestion;
 
+    public String weatherImage;
 }

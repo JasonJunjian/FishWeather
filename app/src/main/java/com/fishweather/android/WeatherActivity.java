@@ -1,5 +1,6 @@
 package com.fishweather.android;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.fishweather.android.gson.Forecast;
 import com.fishweather.android.gson.Weather;
+import com.fishweather.android.service.AutoUpdateService;
 import com.fishweather.android.util.HttpUtil;
 import com.fishweather.android.util.Utility;
 
@@ -79,7 +81,7 @@ public class WeatherActivity extends AppCompatActivity {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherStr = preferences.getString("weather", null);
-        String bingImageStr = preferences.getString("bingImage", null);
+       // String bingImageStr = preferences.getString("bingImage", null);
 
 //        if (!TextUtils.isEmpty(bingImageStr)) {
 //            Glide.with(this).load(bingImageStr).into(bingImage);
@@ -92,6 +94,7 @@ public class WeatherActivity extends AppCompatActivity {
         } else {
             Weather weather = Utility.convertWeatherResponse(weatherStr);
             weatherId = weather.basic.id;
+            showWeatherInfo(weather);
             requestWeather(weatherId);
         }
 
@@ -138,6 +141,7 @@ public class WeatherActivity extends AppCompatActivity {
                                     .getDefaultSharedPreferences(WeatherActivity.this).edit();
                             editor.putString("weather", body);
                             editor.apply();
+                            weather.weatherImage = getWeatherImage( weather.now.cond.info);
                             showWeatherInfo(weather);
                             Toast.makeText(WeatherActivity.this, "更新成功", Toast.LENGTH_SHORT)
                                     .show();
@@ -152,6 +156,27 @@ public class WeatherActivity extends AppCompatActivity {
         });
     }
 
+    private String getWeatherImage(String weatherInfo){
+        String imageUrl = "http://i.tq121.com.cn/i/jsyb/d00.jpg";
+        if(weatherInfo.equals("晴")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d00.jpg";
+        }else if(weatherInfo.contains("云")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d01.jpg";
+        }else if(weatherInfo.contains("阴")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d02.jpg";
+        }else if(weatherInfo.contains("雷")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d03.jpg";
+        }else if(weatherInfo.contains("雪")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d17.jpg";
+        }else if(weatherInfo.contains("雨")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d03.jpg";
+        }else if(weatherInfo.contains("雾")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d18.jpg";
+        }else if(weatherInfo.contains("霾")||weatherInfo.contains("沙")||weatherInfo.contains("尘")){
+            imageUrl = "http://i.tq121.com.cn/i/jsyb/d20.jpg";
+        }
+        return imageUrl;
+    }
     private void showWeatherInfo(Weather weather) {
         String updateTime = weather.basic.update.updateTime.split(" ")[1];
         String name = weather.basic.city;
@@ -180,26 +205,10 @@ public class WeatherActivity extends AppCompatActivity {
             aqiText.setText(weather.aqi.city.aqi);
             pmText.setText(weather.aqi.city.pm25);
         }
-        //http://i.tq121.com.cn/i/jsyb/d01.jpg
-        String imageUrl = "http://i.tq121.com.cn/i/jsyb/d00.jpg";
-        if(weatherInfo.equals("晴")){
-            imageUrl = "http://i.tq121.com.cn/i/jsyb/d00.jpg";
-        }else if(weatherInfo.contains("云")){
-            imageUrl = "http://i.tq121.com.cn/i/jsyb/d01.jpg";
-        }else if(weatherInfo.contains("阴")){
-            imageUrl = "http://i.tq121.com.cn/i/jsyb/d02.jpg";
-        }else if(weatherInfo.contains("雷")){
-            imageUrl = "http://i.tq121.com.cn/i/jsyb/d03.jpg";
-        }else if(weatherInfo.contains("雪")){
-            imageUrl = "http://i.tq121.com.cn/i/jsyb/d17.jpg";
-        }else if(weatherInfo.contains("雨")){
-            imageUrl = "http://i.tq121.com.cn/i/jsyb/d03.jpg";
-        }else if(weatherInfo.contains("雾")){
-            imageUrl = "http://i.tq121.com.cn/i/jsyb/d18.jpg";
-        }else if(weatherInfo.contains("霾")||weatherInfo.contains("沙")||weatherInfo.contains("尘")){
-            imageUrl = "http://i.tq121.com.cn/i/jsyb/d20.jpg";
-        }
-        Glide.with(this).load(imageUrl).into(bingImage);
+        Glide.with(this).load(weather.weatherImage).into(bingImage);
+
+        Intent intent = new Intent(WeatherActivity.this, AutoUpdateService.class);
+        startService(intent);
     }
 
     private void loadBingPic() {
